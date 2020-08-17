@@ -1,8 +1,7 @@
 package com.luohh.playrole.system.controller;
 
-import com.luohh.playrole.config.DBContextHolder;
 import com.luohh.playrole.system.mapper.SysUserMapper;
-import com.luohh.playrole.system.model.SysUser;
+import com.luohh.playrole.system.entity.SysUser;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;

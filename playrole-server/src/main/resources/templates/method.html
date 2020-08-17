@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>easycampus API文档 方法详情</title>
+    <link href="https://iotechn.oss-cn-hangzhou.aliyuncs.com/open/style/commons.css" rel="stylesheet" type="text/css"/>
+    <link rel="stylesheet" href="https://iotechn.oss-cn-hangzhou.aliyuncs.com/open/stylesheets/commons.css">
+    <link rel="stylesheet" type="text/css"
+          href="https://iotechn.oss-cn-hangzhou.aliyuncs.com/open/stylesheets/index-news.css">
+    <script src="https://iotechn.oss-cn-hangzhou.aliyuncs.com/open/js/jquery-lastest.js"></script>
+</head>
+<body>
+<div class="open-header clearfix">
+    <div class="pm">
+        <div class="open-header-c1 fl">
+            <!-- logo -->
+            <a href="/"><span class='open-header-icon'></span></a>
+        </div>
+    </div>
+</div>
+<div class="open-nav">
+    <div class="pm">
+        <ul class="openapi-nav">
+            <li class="openapi-nav-apis" type=""><a th:href="@{'/api-info/group/'+${gp}}">API</a></li>
+        </ul>
+    </div>
+</div>
+<script type="text/javascript">
+    function setLang(lang) {
+        $.post("/lang", {lang: lang}, function (result) {
+            window.location.reload(true);
+        });
+    }
+
+    var selected = "index";
+    var locationPath = window.location.pathname.toLowerCase();
+    if (locationPath.indexOf("apis") > 0 || locationPath.indexOf("testapi") > 0) {
+        selected = "apis";
+    } else if (locationPath.indexOf("docs") > 0) {
+        selected = "docs";
+    } else if (locationPath.indexOf("enter") > 0) {
+        selected = "enter";
+    }
+    $(".openapi-nav li").removeClass("active");
+    $(".openapi-nav-" + selected).addClass("active");
+</script>
+<div class="pm">
+    <nav class="open-breadcrumbs">
+        <a href="#">API</a>/<a th:href="@{'/api-info/group/'+${gp}}">[[${gp}]]</a>/[[${model.name}]]
+    </nav>
+    <div class="clearfix">
+        <div class="open-grid-c1">
+            <aside class="open-sideber">
+                <ul class="open-sideber-list1">
+                    <li>
+                        <a href="javascript:void(0);" onclick="return false;" class="groupName">[[${gp}]]开放接口</a>
+                        <ul class="open-sideber-list2">
+                            <li th:each="method:${methods}" th:attr="data-name=${method.name}">
+                                <a th:href="@{'/api-info/api/'+${gp}+'/'+${method.name}}">
+                                    [[${method.describe}]]
+                                    <br>[[${gp}]].[[${method.name}]]
+                                </a>
+                            </li>
+
+                        </ul>
+                    </li>
+                </ul>
+            </aside>
+        </div>
+        <div class="open-grid-c2">
+            <section class="open-detail">
+                <h1>[[${model.name}]]</h1>
+                <section>
+                    <h2>API 描述</h2>
+                    <p>[[${model.describe}]]</p>
+                </section>
+                <section>
+                    <h2>参数列表</h2>
+                    <section>
+                        <h3>系统级别参数</h3>
+                        <table>
+                            <thead>
+                            <tr>
+                                <th>必要性</th>
+                                <th>参数名</th>
+                                <th>类型</th>
+                                <th>描述</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr>
+                                <td>必填</td>
+                                <td>_group</td>
+                                <td><a href="javascript:void(0);">string</a></td>
+                                <td>method,所在分组 [[${gp}]]</td>
+                            </tr>
+
+                            <tr>
+                                <td>必填</td>
+                                <td>_method</td>
+                                <td><a href="javascript:void(0);">string</a></td>
+                                <td>method,请求的方法名 [[${model.name}]]</td>
+                            </tr>
+                            </tbody>
+                        </table>
+                        <hr>
+                        <h3>应用级别参数</h3>
+                        <table>
+                            <thead>
+                            <tr>
+                                <th>必要性</th>
+                                <th>参数名</th>
+                                <th>class类型</th>
+                                <th>方式类型</th>
+                                <th>描述</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr th:each="p : ${model.parameters}">
+                                <td th:if="${p.required}">
+                                    必填
+                                </td>
+                                <td th:if="${!p.required}">
+                                    可空
+                                </td>
+                                <td>[[${p.name}]]</td>
+                                <td>[[${p.paramType}]]</td>
+                                <td>[[${p.type}]]</td>
+                                <td>[[${p.describe}]]</td>
+                            </tr>
+
+                            </tbody>
+                        </table>
+                    </section>
+                </section>
+                <section>
+                    <h2>返回值</h2>
+                    <section>
+                        <h3>返回类型 </h3>
+                        <p>[[${model.resultType}]] </p>
+                        <p>注:所有的DO对象都有Long id , Date gmtUpdate , Date gmtCreate 三个属性</p>
+                        <div th:if="${model.resultFilds!=null}">
+                            <hr>
+                            <h3>类型定义</h3>
+                            <table>
+                                <thead>
+                                <tr>
+                                    <th>属性名</th>
+                                    <th>类型</th>
+                                    <th>描述</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <tr th:each="field : ${model.resultFilds}">
+                                    <td>[[${field.name}]]</td>
+                                    <td>[[${field.type}]]</td>
+                                    <td>暂无描述</td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </section>
+                </section>
+                <section>
+                    <h2>测试Api</h2>
+                    <table>
+                        <thead>
+                        <tr>
+                            <th>parameter name</th>
+                            <th>value</th>
+                            <th>describe</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr>
+                            <td>_group<span class="text-important">*</span></td>
+                            <td id="_group">[[${gp}]]</td>
+                            <td>请求参数分组</td>
+                        </tr>
+                        <tr>
+                            <td>_method<span class="text-important">*</span></td>
+                            <td id="_method">[[${model.name}]]</td>
+                            <td>请求参数名</td>
+                        </tr>
+                        <tr th:each="p:${model.parameters}">
+                            <td>[[${p.name}]]
+                                <span th:if="${p.required}" class="text-important">*</span>
+                            </td>
+                            <td><input th:id="${p.name}" th:name="${p.name}" type="text"></td>
+                            <td>[[${p.describe}]]</td>
+                        </tr>
+                        </tbody>
+                    </table>
+                    <hr>
+                    <a href="javascript:" class="open-detail-btn" id="submitId">提交测试</a>
+                    <hr>
+                    <div class="clearfix">
+                        <section style="margin-bottom: 20px">
+                            <h2>request:</h2>
+                            <pre class="prettyprint lang-http"><code id="urlParams" style="min-height: 100px"
+                                                                     class="hljs"><span
+                                    class="hljs-attribute"></span></code></pre>
+                        </section>
+                        <section style="margin-bottom: 20px">
+                            <h2>response:</h2>
+                            <pre class="prettyprint lang-json"><code id="result" style="min-height: 100px"
+                                                                     class="hljs"></code></pre>
+                        </section>
+                    </div>
+                </section>
+                <section>
+                    <h2>异常返回值</h2>
+                    <section>
+                        <table>
+                            <thead>
+                            <tr>
+                                <th>异常返回值</th>
+                                <th>描述</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr th:each="exc :${exceptionList}">
+                                <td>[[${exc.code}]]</td>
+                                <td>[[${exc.msg}]]</td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </section>
+                </section>
+            </section>
+        </div>
+    </div>
+</div>
+
+<div class="open-footer">
+    <ul>
+        <li><a href="#">API</a></li>
+    </ul>
+    <p>备案</p>
+</div>
+<script src="http://open.fengqu.com/js/md5.min.js"></script>
+<script type="text/javascript">
+    var path = location.pathname.split("/");
+    var len = path.length;
+    if (len > 2) {
+        var groupElement = $("." + path[len - 2]);
+        groupElement.addClass("active");
+        groupElement.parent().parent().find("ul").css("display", "block");
+        $("[data-name='" + decodeURI(path[len - 1]) + "']").addClass("active");
+    }
+    $(".groupName").click(function () {
+        if ($(this).parent().parent().find("ul").css("display") == "block") {
+            $(this).removeClass('active');
+            $($(this).parent().parent().find("ul")).css("display", "none");
+        } else {
+            $(this).addClass('active');
+            $($(this).parent().parent().find("ul")).css("display", "block");
+        }
+    });
+
+    function setLang(lang) {
+        $.post("/lang", {lang: lang}, function (result) {
+            window.location.reload(true);
+        });
+    }
+</script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.2.0/highlight.min.js"></script>
+<script th:inline="javascript">
+    function getParamData() {
+        //获取参数
+        var requestData = {};
+        requestData._group = $("#_group").text();
+        requestData._method = $("#_method").text();
+        var parameters=[[${model.parameters}]];
+        parameters.forEach(function (p) {
+            var name=p.name;
+            requestData[name] = $('#'+name).val();
+        });
+        return requestData;
+    }
+
+    $('#submitId').click(function () {
+        var data = getParamData();
+        var accessToken = $("#access_token").val();
+        var adminAccessToken = $("#admin_access_token").val();
+        $.ajax({
+            type: "POST",
+            url: '/api-service',
+            dataType: "json",
+            data: data,
+            beforeSend: function (request) {
+                if (accessToken) {
+                    request.setRequestHeader("ACCESSTOKEN", accessToken);
+                }
+                if (adminAccessToken) {
+                    request.setRequestHeader("ADMINTOKEN", adminAccessToken);
+                }
+            },
+            cache: true,
+            success: success,
+            error: error
+        });
+
+
+        function success(data) {
+            $("#result").text(JSON.stringify(data, undefined, 4));
+        }
+
+        function error(data) {
+            console.log(data);
+        }
+
+        var urlValue = [];
+        for (var prop in data) {
+            urlValue.push(prop + "=" + data[prop]);
+        }
+        $("#urlParams").text("GET \r\n--url " + "/api-service?" + urlValue.join("&") + " \r\n--header access_token=" + accessToken);
+    });
+</script>
+
+</body>
+</html>

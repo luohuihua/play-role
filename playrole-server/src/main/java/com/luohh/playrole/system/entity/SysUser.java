@@ -1,4 +1,4 @@
-package com.luohh.playrole.system.model;
+package com.luohh.playrole.system.entity;
 
 import lombok.Data;
 
@@ -9,6 +9,8 @@ import java.util.Map;
 import java.util.List;
 
 /**
+ * 用户表实体类
+ *
  * @author luohh
  */
 @Data
