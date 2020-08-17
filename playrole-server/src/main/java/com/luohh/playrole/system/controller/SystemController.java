@@ -1,5 +1,6 @@
 package com.luohh.playrole.system.controller;
 
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.luohh.playrole.system.mapper.SysUserMapper;
 import com.luohh.playrole.system.entity.SysUser;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,8 +20,11 @@ public class SystemController {
     @RequestMapping("/test")
     public Object test() {
 //        DBContextHolder.slave();
-        List<SysUser> unimallUsers = sysUserMapper.selectList(null);
+//        List<SysUser> unimallUsers = sysUserMapper.selectList(null);
 //        unimallUsers=unimallUserMapper.queryUnimallUser(new UnimallUser());
-        return unimallUsers;
+        QueryWrapper<SysUser> sysUserQueryWrapper=new QueryWrapper<>();
+        sysUserQueryWrapper.eq("phone","13537927121");
+        SysUser sysUser =sysUserMapper.selectOne(sysUserQueryWrapper);
+        return sysUser;
     }
 }

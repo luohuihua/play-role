@@ -10,10 +10,10 @@ import com.baomidou.mybatisplus.core.handlers.MetaObjectHandler;
 import com.baomidou.mybatisplus.extension.plugins.PaginationInterceptor;
 import com.baomidou.mybatisplus.extension.spring.MybatisSqlSessionFactoryBean;
 import com.luohh.playrole.config.properties.DruidProperties;
+import org.apache.ibatis.logging.stdout.StdOutImpl;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.context.properties.ConfigurationProperties;
-import org.springframework.boot.jdbc.DataSourceBuilder;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
@@ -137,6 +137,8 @@ public class MybatisPlusConfig {
         configuration.setMapUnderscoreToCamelCase(true);
         configuration.setCacheEnabled(false);
         configuration.setCallSettersOnNulls(true);
+        //这个配置会将执行的sql打印出来，在开发或测试的时候可以用
+        configuration.setLogImpl(StdOutImpl.class);
         sqlSessionFactory.setConfiguration(configuration);
         //  添加分页功能
         sqlSessionFactory.setPlugins(paginationInterceptor);

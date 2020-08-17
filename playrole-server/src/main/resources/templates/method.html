@@ -91,7 +91,7 @@
                                 <td>必填</td>
                                 <td>_group</td>
                                 <td><a href="javascript:void(0);">string</a></td>
-                                <td>method,所在分组 [[${gp}]]</td>
+                                <td>group,所在分组 [[${gp}]]</td>
                             </tr>
 
                             <tr>
@@ -137,7 +137,7 @@
                     <section>
                         <h3>返回类型 </h3>
                         <p>[[${model.resultType}]] </p>
-                        <p>注:所有的DO对象都有Long id , Date gmtUpdate , Date gmtCreate 三个属性</p>
+                        <p>注:所有的DO对象都有Long id ,Integer status, Date updateTime , Date createTime 四个属性</p>
                         <div th:if="${model.resultFilds!=null}">
                             <hr>
                             <h3>类型定义</h3>

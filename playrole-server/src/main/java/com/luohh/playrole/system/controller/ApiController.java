@@ -121,7 +121,7 @@ public class ApiController {
                     throw new ApiServiceException(ApiServiceExceptionDefinition.API_NOT_EXISTS);
                 }
                 //普通请求
-                if (requestParam.type() == RequestParamType.COMMON) {
+                if (requestParam.type() == RequestParamType.COMMON||requestParam.type() == RequestParamType.IP) {
                     String[] paramArray = parameterMap.get(requestParam.name());//参数名数组
                     if (paramArray != null && paramArray.length > 0 && !StringUtils.isEmpty(paramArray[0])) {
                         Class<?> type = methodParam.getType();
@@ -155,7 +155,7 @@ public class ApiController {
                             args[i] = constructor.newInstance(requestParam.valueDef());
                         } else {
                             if (methodParam.getAnnotation(RequestNotNull.class) != null) {
-                                logger.error("missing :" + requestParam.name());
+                                logger.error("缺少属性 :" + requestParam.name());
                                 throw new ApiServiceException(ApiServiceExceptionDefinition.PARAM_CHECK_FAILED);
                             }
                             args[i] = null;
