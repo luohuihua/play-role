@@ -274,6 +274,9 @@
 </script>
 <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.2.0/highlight.min.js"></script>
 <script th:inline="javascript">
+
+    $('#accessToken').val(window.localStorage.getItem('ACCESSTOKEN'));
+
     function getParamData() {
         //获取参数
         var requestData = {};
@@ -297,6 +300,7 @@
             data: data,
             beforeSend: function (request) {
                 if (accessToken) {
+                    window.localStorage.setItem('ACCESSTOKEN', accessToken);
                     request.setRequestHeader("ACCESSTOKEN", accessToken);
                 }
             },
