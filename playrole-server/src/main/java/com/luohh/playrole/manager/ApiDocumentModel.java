@@ -74,6 +74,10 @@ public class ApiDocumentModel {
          * 参数集合
          */
         private List<Parameter> parameters;
+        /**
+         * 是否需要登录
+         */
+        private Boolean checkLogin;
 
         public String getName() {
             return name;
@@ -113,6 +117,14 @@ public class ApiDocumentModel {
 
         public void setParameters(List<Parameter> parameters) {
             this.parameters = parameters;
+        }
+
+        public Boolean getCheckLogin() {
+            return checkLogin;
+        }
+
+        public void setCheckLogin(Boolean checkLogin) {
+            this.checkLogin = checkLogin;
         }
     }
 

@@ -7,6 +7,7 @@ import java.util.List;
  * 通用工具类
  */
 public class ToolsUtil {
+    public static String ACCESSTOKEN="ACCESSTOKEN";
     /**
      * 返回是否转字符串
      */

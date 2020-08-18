@@ -14,7 +14,7 @@ import com.luohh.playrole.system.entity.SysUser;
 @RequestApi(group = "user-service", describe = "用户服务")
 public interface IUserService {
 
-    @RequestMethod(describe = "用户登录")
+    @RequestMethod(describe = "用户登录", checkLogin = false)
     public SysUser login(
             @RequestNotNull @RequestParam(name = "phone", type = RequestParamType.COMMON, describe = "用户手机号") String phone,
             @RequestNotNull @RequestParam(name = "password", type = RequestParamType.COMMON, describe = "用户密码") String password,

@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="zh" xmlns:th="http://www.thymeleaf.org">
 <head>
-    <title>easycampus API文档 方法详情</title>
+    <title>API文档 方法详情</title>
     <link href="https://iotechn.oss-cn-hangzhou.aliyuncs.com/open/style/commons.css" rel="stylesheet" type="text/css"/>
     <link rel="stylesheet" href="https://iotechn.oss-cn-hangzhou.aliyuncs.com/open/stylesheets/commons.css">
     <link rel="stylesheet" type="text/css"
@@ -181,6 +181,15 @@
                             <td id="_method">[[${model.name}]]</td>
                             <td>请求参数名</td>
                         </tr>
+
+                        <tr th:if="${model.checkLogin}">
+                            <td>accessToken<span class="text-important">
+                               <span class="text-important">*</span>
+                                </span>
+                            </td>
+                            <td><input id="accessToken" name="accessToken" type="text"></td>
+                            <td>需要用户登录的接口</td>
+                        </tr>
                         <tr th:each="p:${model.parameters}">
                             <td>[[${p.name}]]
                                 <span th:if="${p.required}" class="text-important">*</span>
@@ -270,18 +279,17 @@
         var requestData = {};
         requestData._group = $("#_group").text();
         requestData._method = $("#_method").text();
-        var parameters=[[${model.parameters}]];
+        var parameters = [[${model.parameters}]];
         parameters.forEach(function (p) {
-            var name=p.name;
-            requestData[name] = $('#'+name).val();
+            var name = p.name;
+            requestData[name] = $('#' + name).val();
         });
         return requestData;
     }
 
     $('#submitId').click(function () {
         var data = getParamData();
-        var accessToken = $("#access_token").val();
-        var adminAccessToken = $("#admin_access_token").val();
+        var accessToken = $("#accessToken").val();
         $.ajax({
             type: "POST",
             url: '/api-service',
@@ -290,9 +298,6 @@
             beforeSend: function (request) {
                 if (accessToken) {
                     request.setRequestHeader("ACCESSTOKEN", accessToken);
-                }
-                if (adminAccessToken) {
-                    request.setRequestHeader("ADMINTOKEN", adminAccessToken);
                 }
             },
             cache: true,

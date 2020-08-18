@@ -3,10 +3,6 @@ package com.luohh.playrole.system.entity;
 import lombok.Data;
 
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.List;
 
 /**
  * 用户表实体类

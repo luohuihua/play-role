@@ -39,6 +39,13 @@ public @interface RequestMethod {
      */
     int maxAge() default -1;
 
+    /**
+     * 是否检查登录,默认是
+     *
+     * @return
+     */
+    boolean checkLogin() default true;
+
 //    /**
 //     * 权限许可码
 //     *

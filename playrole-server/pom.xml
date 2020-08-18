@@ -33,11 +33,11 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-thymeleaf</artifactId>
         </dependency>
-<!--        &lt;!&ndash; 模板引擎 freemarker &ndash;&gt;-->
-<!--        <dependency>-->
-<!--            <groupId>org.springframework.boot</groupId>-->
-<!--            <artifactId>spring-boot-starter-freemarker</artifactId>-->
-<!--        </dependency>-->
+        <!--        &lt;!&ndash; 模板引擎 freemarker &ndash;&gt;-->
+        <!--        <dependency>-->
+        <!--            <groupId>org.springframework.boot</groupId>-->
+        <!--            <artifactId>spring-boot-starter-freemarker</artifactId>-->
+        <!--        </dependency>-->
 
         <!-- mybatis工具包 -->
         <dependency>
@@ -112,6 +112,18 @@
             <version>1.2.73</version>
         </dependency>
 
+        <!-- redis 依赖 -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-data-redis</artifactId>
+        </dependency>
+
+        <!--JWT-->
+        <dependency>
+            <groupId>com.auth0</groupId>
+            <artifactId>java-jwt</artifactId>
+            <version>3.10.3</version>
+        </dependency>
 
     </dependencies>
 

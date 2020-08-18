@@ -9,6 +9,7 @@ import com.luohh.playrole.exception.ApiServiceException;
 import com.luohh.playrole.exception.ApiServiceExceptionDefinition;
 import com.luohh.playrole.manager.ApiServiceManager;
 import com.luohh.playrole.system.model.ResultData;
+import com.luohh.playrole.util.RedisUtil;
 import com.luohh.playrole.util.ToolsUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -40,6 +41,9 @@ public class ApiController {
     private ApplicationContext applicationContext;
 //    @Autowired
 //    private StringRedisTemplate userRedisTemplate;
+
+    @Autowired
+    private RedisUtil redisUtil;
 
     /**
      * 统一接收请求，根据传入的组，方法名，参数进行调用service返回数据
@@ -111,6 +115,19 @@ public class ApiController {
                 //只起标记作用防止调到封闭方法了
                 throw new ApiServiceException(ApiServiceExceptionDefinition.API_NOT_EXISTS);
             }
+            //需要校验权限
+            if (requestMethod.checkLogin()) {
+                String accesstoken = request.getParameter(ToolsUtil.ACCESSTOKEN);
+                if (accesstoken == null || accesstoken.length() <= 0)
+                    accesstoken = request.getHeader(ToolsUtil.ACCESSTOKEN);
+                if (accesstoken == null || accesstoken.length() <= 0) {
+                    throw new ApiServiceException(ApiServiceExceptionDefinition.USER_NOT_LOGIN);
+                }
+                Object user = redisUtil.get(accesstoken);
+                if (user == null) {
+                    throw new ApiServiceException(ApiServiceExceptionDefinition.USER_NOT_LOGIN);
+                }
+            }
             Object serviceBean = applicationContext.getBean(method.getDeclaringClass());//获取调用的业务bean实体
             Parameter[] methodParameters = method.getParameters();//方法参数
             Object[] args = new Object[methodParameters.length];//入参数组
@@ -121,7 +138,7 @@ public class ApiController {
                     throw new ApiServiceException(ApiServiceExceptionDefinition.API_NOT_EXISTS);
                 }
                 //普通请求
-                if (requestParam.type() == RequestParamType.COMMON||requestParam.type() == RequestParamType.IP) {
+                if (requestParam.type() == RequestParamType.COMMON || requestParam.type() == RequestParamType.IP) {
                     String[] paramArray = parameterMap.get(requestParam.name());//参数名数组
                     if (paramArray != null && paramArray.length > 0 && !StringUtils.isEmpty(paramArray[0])) {
                         Class<?> type = methodParam.getType();

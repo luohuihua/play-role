@@ -10,7 +10,7 @@ public class ApiServiceExceptionDefinition {
 
     public static final ApiServiceExceptionModel UNKNOWN_EXCEPTION = new ApiServiceExceptionModel(-100, "系统未知异常");
 
-    public static final ApiServiceExceptionModel USER_NOT_LOGIN = new ApiServiceExceptionModel(-101, "用户尚未登录");
+    public static final ApiServiceExceptionModel USER_NOT_LOGIN = new ApiServiceExceptionModel(-101, "用户尚未登录或登录失效");
 
     public static final ApiServiceExceptionModel PARAM_CHECK_FAILED = new ApiServiceExceptionModel(-102, "参数校验失败");
 

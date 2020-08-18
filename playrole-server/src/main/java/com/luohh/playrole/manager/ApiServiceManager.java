@@ -167,6 +167,7 @@ public class ApiServiceManager implements InitializingBean, ApplicationContextAw
                 docMethod.setParameters(docParameters);//设置参数
                 RequestMethod requestMethod = method.getAnnotation(RequestMethod.class);//方法注解
                 if (requestMethod != null) {
+                    docMethod.setCheckLogin(requestMethod.checkLogin());
                     docMethod.setDescribe(requestMethod.describe());//描述
                     docMethod.setName(method.getName());//方法名
                     Type returnType = method.getGenericReturnType();//返回类型
