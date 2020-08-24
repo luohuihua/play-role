@@ -34,7 +34,7 @@ public class DBContextHolder {
             set(DBTypeEnum.SLAVE);
             System.out.println("切换到slave");
         } else {
-            System.out.println("宇大人");
+            System.out.println("宇大人1");
         }
     }
 
