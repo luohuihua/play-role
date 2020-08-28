@@ -1,10 +1,13 @@
 package com.luohh.playrole.exception;
 
+import lombok.Data;
+
 import java.io.Serializable;
 
 /**
  * aip服务异常
  */
+@Data
 public class ApiServiceException extends Exception implements Serializable {
     /**
      * 编码

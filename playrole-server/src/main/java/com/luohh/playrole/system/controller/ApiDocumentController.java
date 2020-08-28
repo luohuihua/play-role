@@ -1,6 +1,7 @@
 package com.luohh.playrole.system.controller;
 
 import com.luohh.playrole.exception.ApiServiceException;
+import com.luohh.playrole.exception.ApiServiceExceptionDefinition;
 import com.luohh.playrole.manager.ApiServiceManager;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -55,9 +56,9 @@ public class ApiDocumentController implements InitializingBean {
     @Override
     public void afterPropertiesSet() throws Exception {
         exceptionDefinitionList = new LinkedList<>();
-        Field[] fields = ApiServiceException.class.getFields();
+        Field[] fields = ApiServiceExceptionDefinition.class.getFields();
         for (Field field : fields) {
-            exceptionDefinitionList.add(field.get(ApiServiceException.class));
+            exceptionDefinitionList.add(field.get(ApiServiceExceptionDefinition.class));
         }
     }
 }
