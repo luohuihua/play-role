@@ -29,13 +29,13 @@
 			<button type="primary" class="primary" @tap="bindLogin">登录</button>
 		</view>
 		<view class="action-row">
-			<navigator url="../reg/reg">注册账号</navigator>
+			<!-- <navigator url="../reg/reg">注册账号</navigator> -->
 			<!-- <text>|</text>
 			<navigator url="../pwd/pwd">忘记密码</navigator> -->
 		</view>
 		<view class="oauth-row" v-if="hasProvider" v-bind:style="{top: positionTop + 'px'}">
 			<view class="oauth-image" v-for="provider in providerList" :key="provider.value">
-				<image :src="provider.image" @tap="oauth(provider.value)"></image>
+				<image :src="provider.image" @tap="thirdPartLogin(provider.value)"></image>
 				<!-- #ifdef MP-WEIXIN -->
 				<button v-if="!isDevtools" open-type="getUserInfo" @getuserinfo="getUserInfo"></button>
 				<!-- #endif -->
@@ -59,13 +59,13 @@
 		data() {
 			return {
 				loginType: 0,
-				loginTypeList: ['密码登录', '免密登录'],
+				loginTypeList: ['密码登录', '验证码登录'],
 				mobile: '',
 				code: '',
-				providerList: [],
+				providerList: [], //登录的图标
 				hasProvider: false,
-				username: '',
-				password: '',
+				username: '13537927121',
+				password: 'Ccr13537927121',
 				positionTop: 0,
 				isDevtools: false,
 				codeDuration: 0
@@ -74,6 +74,9 @@
 		computed: mapState(['forcedLogin']),
 		methods: {
 			...mapMutations(['login']),
+			/**
+			 * 初始化快捷登录资源
+			 */
 			initProvider() {
 				const filters = ['weixin', 'qq', 'sinaweibo'];
 				uni.getProvider({
@@ -104,7 +107,7 @@
 				this.positionTop = uni.getSystemInfoSync().windowHeight - 100;
 			},
 			sendSmsCode() {
-				if(this.codeDuration) {
+				if (this.codeDuration) {
 					uni.showModal({
 						content: `请在${this.codeDuration}秒后重试`,
 						showCancel: false
@@ -158,10 +161,6 @@
 				})
 			},
 			loginByPwd() {
-				/**
-				 * 客户端对账号信息进行一些必要的校验。
-				 * 实际开发中，根据业务需要进行处理，这里仅做示例。
-				 */
 				if (this.username.length < 3) {
 					uni.showToast({
 						icon: 'none',
@@ -179,12 +178,18 @@
 				const data = {
 					phone: this.username,
 					password: this.password,
-					ip:123
 				};
 				let _self = this;
-				
-				this.$api.request('user-service','login',data);
-				
+
+				this.$api.request('user-service', 'login', data).then((user) => {
+					if (user != null) {
+						this.$api.msg('登录成功');
+
+						this.$api.setUserInfo(user);
+						this.toMain(user.nickname);
+					}
+				});
+
 			},
 			loginBySms() {
 				if (!/^1\d{10}$/.test(this.mobile)) {
@@ -202,78 +207,53 @@
 					return;
 				}
 				let _self = this;
-
-				uniCloud.callFunction({
-					name: 'user-center',
-					data: {
-						action: 'loginBySms',
-						params: {
-							mobile: this.mobile,
-							code: this.code
-						}
-					},
-					success: (e) => {
-
-						console.log('login success', e);
-
-						if (e.result.code == 0) {
-							const username = e.result.username || '新用户'
-							uni.setStorageSync('uniIdToken', e.result.token)
-							uni.setStorageSync('username', username)
-							uni.setStorageSync('login_type', 'online')
-							_self.toMain(username);
-						} else {
-							uni.showModal({
-								content: e.result.msg,
-								showCancel: false
-							})
-							console.log('登录失败', e);
-						}
-
-					},
-					fail(e) {
-						uni.showModal({
-							content: JSON.stringify(e),
-							showCancel: false
-						})
-					}
-				})
+				uni.showToast({
+					title: '暂时无法接收验证码，请使用其他登录方式'
+				});
 			},
 			bindLogin() {
 				switch (this.loginType) {
-					case 0:
-						this.loginByPwd()
+					case 0: //密码登录
+						this.loginByPwd();
 						break;
-					case 1:
-						this.loginBySms()
+					case 1: //验证码登录
+						this.loginBySms();
 						break;
 					default:
 						break;
 				}
 			},
-			oauth(value) {
-				console.log('三方登录只演示登录api能力，暂未关联云端数据');
+			/**
+			 * 第三方登录
+			 * @param {Object} value
+			 */
+			thirdPartLogin(value) {
 				uni.login({
 					provider: value,
 					success: (res) => {
 						uni.getUserInfo({
 							provider: value,
 							success: (infoRes) => {
-								/**
-								 * 实际开发中，获取用户信息后，需要将信息上报至服务端。
-								 * 服务端可以用 userInfo.openId 作为用户的唯一标识新增或绑定用户信息。
-								 */
-								this.loginLocal(infoRes.userInfo.nickName);
+
+								console.log(JSON.stringify(infoRes));
+								infoRes.userInfo.loginType=value;
+								this.$api.request('user-service', 'thirdPartLogin', infoRes.userInfo).then((user) => {
+									if (user != null) {
+										this.$api.msg('登录成功');
+									
+										this.$api.setUserInfo(user);
+										this.toMain(user.nickname);
+									}
+								});
+
 							},
 							fail() {
-								uni.showToast({
-									icon: 'none',
-									title: '登陆失败'
-								});
+								this.$api.msg('登陆失败');
 							}
 						});
 					},
 					fail: (err) => {
+						this.$api.msg('授权登录失败' + JSON.stringify(err));
 						console.error('授权登录失败：' + JSON.stringify(err));
 					}
 				});

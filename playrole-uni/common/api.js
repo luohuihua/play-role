@@ -7,6 +7,9 @@ Vue.use(Vuex)
 
 const defConfig = config.def
 
+/**
+ * 提示
+ */
 const msg = (title, duration = 1500, mask = false, icon = 'none') => {
 	//统一提示方便全局修改
 	if (Boolean(title) === false) {
@@ -22,6 +25,9 @@ const msg = (title, duration = 1500, mask = false, icon = 'none') => {
 
 let userInfo = undefined;
 
+/**
+ * 退出登录
+ */
 const logout = () => {
 	userInfo = undefined
 	uni.removeStorage({
@@ -29,11 +35,20 @@ const logout = () => {
 	});
 }
 
-const setUserInfo = (i) => {
-	userInfo = i;
+/**
+ * 设置用户
+ */
+const setUserInfo = (user) => {
+	userInfo = user;
+	uni.setStorageSync('userInfo', user)
 }
 
+/**
+ * 获取用户
+ */
 const getUserInfo = (i) => {
+	if (!userInfo)
+		userInfo = uni.getStorageSync('userInfo')
 	return userInfo;
 }
 
@@ -66,11 +81,11 @@ const request = (_group, _method, data = {}, failCallback) => {
 			success: (res) => {
 				console.log('请求' + baseUrl + '/m.api' + ',结果返回' + JSON.stringify(res));
 				if (res.statusCode === 200) {
-					if (res.data.errno === 200) {
-						resolve(res.data);
-					} else if (res.data.code === 1001) {
+					if (res.data.statusCode === 200) {
+						resolve(res.data.data);
+					} else if (res.data.statusCode === 1001) {
 						if (failCallback) {
-							failCallback(res.data)
+							failCallback(res.data.data)
 						}
 						if (!loginLock) {
 							loginLock = true
@@ -97,10 +112,7 @@ const request = (_group, _method, data = {}, failCallback) => {
 						if (failCallback) {
 							failCallback(res.data)
 						} else {
-							uni.showToast({
-								title: res.data.msg,
-								icon: 'none'
-							})
+							msg(res.data.msg);
 						}
 					}
 				}

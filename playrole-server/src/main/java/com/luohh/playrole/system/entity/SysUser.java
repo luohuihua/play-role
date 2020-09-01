@@ -38,7 +38,7 @@ public class SysUser implements Serializable {
      * 登录类型
      * isNullAble:0
      */
-    private Integer loginType;
+    private String loginType;
 
     /**
      * 微信唯一标记
@@ -50,7 +50,7 @@ public class SysUser implements Serializable {
      * 名称
      * isNullAble:1
      */
-    private String nickname;
+    private String nickName;
 
     /**
      * 头像路径

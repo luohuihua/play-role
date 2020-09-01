@@ -30,46 +30,21 @@
 	export default {
 		computed: mapState(['forcedLogin', 'hasLogin', 'userName']),
 		onLoad() {
-			const loginType = uni.getStorageSync('login_type')
-			if (loginType === 'local') {
-				this.login(uni.getStorageSync('username'))
-				return
-			}
-			let uniIdToken = uni.getStorageSync('uniIdToken')
-			if (uniIdToken) {
-				this.login(uni.getStorageSync('username'))
-				uniCloud.callFunction({
-					name: 'user-center',
-					data: {
-						action: 'checkToken',
-					},
-					success: (e) => {
-
-						console.log('checkToken success', e);
-
-						if (e.result.code > 0) {
-							//token过期或token不合法，重新登录
-							if (this.forcedLogin) {
-								uni.reLaunch({
-									url: '../login/login'
-								});
-							} else {
-								uni.navigateTo({
-									url: '../login/login'
-								});
-							}
-						}
-					},
-					fail(e) {
-						uni.showModal({
-							content: JSON.stringify(e),
-							showCancel: false
-						})
-					}
-				})
+			let userInfo = this.$api.getUserInfo();
+			if (userInfo != null && userInfo.accessToken != null) {
+				this.$api.request('user-service', 'checkLogin', userInfo).then((res) => {
+					this.login(userInfo.nickName)
+				}, (err) => {
+					this.guideToLogin()
+				});
 			} else {
 				this.guideToLogin()
 			}
+		},
+		onShow() {
+			let userInfo = this.$api.getUserInfo();
+			if (userInfo != null)
+				this.login(userInfo.nickName)
 		},
 		methods: {
 			...mapMutations(['login']),

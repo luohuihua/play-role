@@ -14,7 +14,7 @@ public class ApiServiceExceptionDefinition {
 
     public static final ApiServiceExceptionModel PARAM_CHECK_FAILED = new ApiServiceExceptionModel(-102, "参数校验失败");
 
-    public static final ApiServiceExceptionModel API_NOT_EXISTS = new ApiServiceExceptionModel(-103, "API不存在");
+    public static final ApiServiceExceptionModel API_NOT_EXISTS = new ApiServiceExceptionModel(-103, "服务端API不存在");
 
 
 }
